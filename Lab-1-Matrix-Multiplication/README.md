@@ -1,15 +1,13 @@
-Lab 1 — Matrix Multiplication using Sequential, OpenMP, MPI and CUDA
-Objective
-
+Lab 1 — Matrix Multiplication using Sequential, OpenMP, MPI and CUDA  Objective
 
 Implement matrix multiplication using different computational approaches and analyze their performance:
 
-Sequential CPU
-OpenMP shared-memory CPU
-MPI distributed-memory CPU
-CUDA GPU
-
+1.Sequential CPU
+2.OpenMP shared-memory CPU
+3.MPI distributed-memory CPU
+4.CUDA GPU
 The execution times of the different implementations are compared to understand the performance benefits of parallel computation.
+
 
 Problem Statement
 
