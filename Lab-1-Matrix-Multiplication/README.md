@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 
  Lab 1 — Matrix Multiplication using Sequential, OpenMP, MPI and CUDA
 
  Objective
+=======
+Lab 1 — Matrix Multiplication using Sequential, OpenMP, MPI and CUDA Objective
+>>>>>>> 01c3c77 (Add complete Lab 1 matrix multiplication setup)
 
 Implement matrix multiplication using different computational approaches and analyze their performance:
 
