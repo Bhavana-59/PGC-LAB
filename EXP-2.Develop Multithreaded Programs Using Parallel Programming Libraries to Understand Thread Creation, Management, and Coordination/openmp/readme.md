@@ -1,9 +1,10 @@
-````markdown
 # Part B — OpenMP
 
 ## Objective
 
 To understand parallel programming using OpenMP and learn about parallel regions, work sharing, race conditions, synchronization, thread coordination, and performance.
+
+---
 
 ## Programs
 
@@ -18,18 +19,18 @@ To understand parallel programming using OpenMP and learn about parallel regions
 
 ---
 
-## 1. omp1.c — Parallel Region
+## 1. `omp1.c` — Parallel Region
 
 ### Purpose
 
 Demonstrates how OpenMP creates multiple threads inside a parallel region.
 
-### Important OpenMP functions
+### Important Functions
 
 ```c
 omp_get_thread_num()
 omp_get_num_threads()
-````
+```
 
 ### Compile
 
@@ -53,15 +54,19 @@ The following directive creates a parallel region:
 
 Each thread executes the code inside the parallel region.
 
-`omp_get_thread_num()` gives the ID of the current thread.
+`omp_get_thread_num()` returns the ID of the current thread.
 
-`omp_get_num_threads()` gives the total number of threads in the parallel region.
+`omp_get_num_threads()` returns the total number of threads in the parallel region.
 
 The exact number of threads depends on the OpenMP runtime and system configuration.
 
+### Output Screenshot
+
+![OpenMP Parallel Region Output](screenshots/omp1_output.png)
+
 ---
 
-## 2. omp_sum.c — Work Sharing and Reduction
+## 2. `omp_sum.c` — Work Sharing and Reduction
 
 ### Purpose
 
@@ -79,7 +84,7 @@ gcc omp_sum.c -o omp_sum -fopenmp
 ./omp_sum
 ```
 
-### Important directive
+### Important Directive
 
 ```c
 #pragma omp parallel for reduction(+:total_sum)
@@ -89,30 +94,21 @@ gcc omp_sum.c -o omp_sum -fopenmp
 
 The `parallel for` directive divides loop iterations among multiple threads.
 
+The `reduction` clause allows each thread to maintain its own partial result and safely combine the results at the end.
+
 For example:
 
 ```text
-Array:
-10 20 30 40 50 60 70 80
-
-        ↓
-
-Multiple threads process different elements
-
-        ↓
-
-Partial sums are combined
-
-        ↓
-
-Total Sum = 360
+10 + 20 + 30 + 40 + 50 + 60 + 70 + 80 = 360
 ```
 
-The `reduction` clause prevents multiple threads from incorrectly modifying the same result variable.
+### Output Screenshot
+
+![OpenMP Sum Output](screenshots/omp_sum_output.png)
 
 ---
 
-## 3. omp_race.c — Race Condition
+## 3. `omp_race.c` — Race Condition
 
 ### Purpose
 
@@ -134,24 +130,23 @@ gcc omp_race.c -o omp_race -fopenmp
 
 Multiple threads increment the same shared counter.
 
-```text
-Thread 1 ─┐
-Thread 2 ─┤
-Thread 3 ─┼──> Shared Counter
-Thread 4 ─┘
-```
+When multiple threads modify the same variable without synchronization, the operations can interfere with each other.
 
-When multiple threads modify the same variable at the same time without synchronization, the final result may be incorrect.
+As a result, the final value may be different from the expected value.
 
 This demonstrates the need for synchronization when accessing shared data.
 
+### Output Screenshot
+
+![OpenMP Race Condition Output](screenshots/omp_race_output.png)
+
 ---
 
-## 4. omp_critical.c — Critical Section
+## 4. `omp_critical.c` — Critical Section
 
 ### Purpose
 
-Demonstrates how OpenMP can protect a critical section using the `critical` directive.
+Demonstrates how OpenMP protects a critical section using the `critical` directive.
 
 ### Compile
 
@@ -165,7 +160,7 @@ gcc omp_critical.c -o omp_critical -fopenmp
 ./omp_critical
 ```
 
-### Important directive
+### Important Directive
 
 ```c
 #pragma omp critical
@@ -175,20 +170,15 @@ gcc omp_critical.c -o omp_critical -fopenmp
 
 Only one thread at a time can execute the code inside the critical section.
 
-```text
-Thread 1 ──> [ Critical Section ] ──> Exit
-Thread 2 ──> waits
-Thread 3 ──> waits
-Thread 4 ──> waits
-```
-
 This prevents multiple threads from modifying shared data simultaneously.
 
-The critical section is therefore useful for protecting shared resources.
+### Output Screenshot
+
+![OpenMP Critical Section Output](screenshots/omp_critical_output.png)
 
 ---
 
-## 5. omp_barrier.c — Thread Coordination
+## 5. `omp_barrier.c` — Thread Coordination
 
 ### Purpose
 
@@ -206,7 +196,7 @@ gcc omp_barrier.c -o omp_barrier -fopenmp
 ./omp_barrier
 ```
 
-### Important directive
+### Important Directive
 
 ```c
 #pragma omp barrier
@@ -216,28 +206,21 @@ gcc omp_barrier.c -o omp_barrier -fopenmp
 
 A barrier makes threads wait until all threads reach the barrier.
 
-Example:
+No thread can continue beyond the barrier until all threads have reached that point.
 
-```text
-Thread 1 ──> Stage 1 ──┐
-Thread 2 ──> Stage 1 ──┤
-Thread 3 ──> Stage 1 ──┤──> Barrier
-Thread 4 ──> Stage 1 ──┘
-                         ↓
-                    Stage 2 starts
-```
+This demonstrates thread coordination during parallel execution.
 
-No thread can continue beyond the barrier until all threads have reached it.
+### Output Screenshot
 
-This provides coordination between threads.
+![OpenMP Barrier Output](screenshots/omp_barrier_output.png)
 
 ---
 
-## 6. omp_perf.c — Performance Analysis
+## 6. `omp_perf.c` — Performance Analysis
 
 ### Purpose
 
-Measures the execution time of an OpenMP program using different numbers of threads.
+To measure the execution time of an OpenMP program using different numbers of threads and calculate speedup and efficiency.
 
 ### Compile
 
@@ -257,6 +240,19 @@ gcc omp_perf.c -o omp_perf -fopenmp
 1, 2, 3, 4, 6, 8
 ```
 
+### Performance Results
+
+The following results were obtained for different numbers of OpenMP threads.
+
+| Threads | OpenMP Time (s) | Speedup | Efficiency (%) |
+|---:|---:|---:|---:|
+| 1 | 1.949716 | 1.318 | 131.75 |
+| 2 | 0.985749 | 2.606 | 130.30 |
+| 3 | 0.845327 | 3.039 | 101.29 |
+| 4 | 0.719812 | 3.568 | 89.22 |
+| 6 | 0.696243 | 3.689 | 61.49 |
+| 8 | 0.690229 | 3.722 | 46.52 |
+
 ### Performance Metrics
 
 #### Speedup
@@ -271,15 +267,13 @@ Speedup = Sequential Time / OpenMP Time
 Efficiency = Speedup / Number of Threads × 100
 ```
 
-### Concept
+### Performance Result Screenshot
 
-The execution time is measured for different numbers of threads.
+![OpenMP Performance Results](screenshots/openmp_performance_results.png)
 
-The results are later used to compare:
+The performance results are used in **Part C — Performance Analysis** to compare OpenMP with the sequential and Pthreads implementations.
 
-* Sequential execution
-* Pthreads
-* OpenMP
+> **Note:** Efficiency values above 100% for lower thread counts are due to run-to-run timing variation and the measured sequential baseline. They do not represent actual CPU utilization above 100%.
 
 ---
 
@@ -293,8 +287,6 @@ The results are later used to compare:
 
 Creates a team of threads to execute a block of code.
 
----
-
 ## Parallel For
 
 ```c
@@ -303,17 +295,13 @@ Creates a team of threads to execute a block of code.
 
 Divides loop iterations among multiple threads.
 
----
-
 ## Reduction
 
 ```c
 reduction(+:sum)
 ```
 
-Allows each thread to maintain its own partial result and safely combine the results at the end.
-
----
+Allows each thread to maintain a partial result and safely combine the results at the end.
 
 ## Critical Section
 
@@ -322,8 +310,6 @@ Allows each thread to maintain its own partial result and safely combine the res
 ```
 
 Allows only one thread at a time to execute a specific section of code.
-
----
 
 ## Barrier
 
@@ -337,40 +323,41 @@ Makes threads wait until all threads reach the same point.
 
 # Pthreads vs OpenMP
 
-| Feature           | Pthreads              | OpenMP                             |
-| ----------------- | --------------------- | ---------------------------------- |
-| Programming level | Lower-level           | Higher-level                       |
-| Thread creation   | Explicit              | Mostly handled by OpenMP           |
-| Work distribution | Programmer controlled | OpenMP can distribute work         |
-| Synchronization   | Mutex, join, etc.     | Critical, barrier, reduction, etc. |
-| Code complexity   | More code             | Less code                          |
-| Control           | More explicit         | More convenient                    |
+| Feature | Pthreads | OpenMP |
+|---|---|---|
+| Programming level | Lower-level | Higher-level |
+| Thread creation | Explicit | Mostly handled by OpenMP |
+| Work distribution | Programmer controlled | OpenMP can distribute work |
+| Synchronization | Mutex, join, etc. | Critical, barrier, reduction, etc. |
+| Code complexity | More code | Less code |
+| Control | More explicit | More convenient |
 
 ---
 
-# Key Learning
+## Key Learning
 
 Through these programs, the following OpenMP concepts were understood:
 
-* Parallel regions
-* Thread identification
-* Work sharing
-* Reduction
-* Race conditions
-* Critical sections
-* Barriers
-* Thread coordination
-* Parallel performance
-* Speedup
-* Efficiency
+- Parallel regions
+- Thread identification
+- Work sharing
+- Reduction
+- Race conditions
+- Critical sections
+- Barriers
+- Thread coordination
+- Parallel performance
+- Speedup
+- Efficiency
+
+---
 
 ## Screenshots
 
-Execution screenshots for each OpenMP program are available in:
+Execution screenshots for the OpenMP programs are available in:
 
 ```text
 screenshots/
 ```
 
-````
-
+The screenshots provide execution evidence for parallel regions, work sharing, race conditions, synchronization, thread coordination, and performance analysis.
