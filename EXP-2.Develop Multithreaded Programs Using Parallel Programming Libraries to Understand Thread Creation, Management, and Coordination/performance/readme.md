@@ -1,5 +1,4 @@
 
-````markdown
 # Part C — Performance Analysis
 
 ## Objective
