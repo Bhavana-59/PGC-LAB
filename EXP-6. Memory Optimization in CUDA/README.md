@@ -155,19 +155,13 @@ Matrix size: 4096 × 4096
 
 Speedup is calculated using:
 
-\[
-Speedup = \frac{Uncoalesced\ Execution\ Time}{Coalesced\ Execution\ Time}
-\]
+**Speedup = Uncoalesced Execution Time / Coalesced Execution Time**
 
-\[
-Speedup = \frac{0.7882}{0.4107}
-\]
+**Speedup = 0.7882 / 0.4107**
 
-\[
-\boxed{Speedup = 1.92\times}
-\]
+**Speedup = 1.92x**
 
-The coalesced implementation achieved approximately 1.92 times the performance of the uncoalesced implementation in this run.
+The coalesced implementation achieved approximately **1.92x speedup** compared to the uncoalesced implementation in this run.
 
 ---
 
@@ -290,4 +284,3 @@ python plot_exp6.py
 | `screenshots/` | Important experiment execution screenshots |
 | `README.md` | Experiment documentation |
 
-**Note:** The executable file `exp6.exe` is used locally and is not required in the GitHub repository. Performance measurements may vary between executions depending on GPU conditions.
